@@ -1,0 +1,20 @@
+@import url("font-open-sans.css");
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.clear { clear:both; display:block; overflow:hidden; visibility:hidden; height:0px;}
+
+body, option, select, input, td, th, div, p{
+    font-family: 'Open Sans';
+    margin:0px;
+    padding:0px;
+    font-size:11px;
+}
+input{
+    position:relative;
+    vertical-align:middle;
+}
