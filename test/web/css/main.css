@@ -18,3 +18,9 @@ input{
     position:relative;
     vertical-align:middle;
 }
+
+table.data tbody td, table.data td{
+  background-color: #fff;
+  border-bottom: 1px #eee solid;
+  border-left: 1px #eee solid;
+}

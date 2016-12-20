@@ -29,9 +29,9 @@ def printRow(item, lft_color, rgt_color, indent):
     ('<span style="color: {lft_color}">'+item+'</span>')+
     '</td><td style="padding-left:{padding}px">'+
     ('<span style="color: {rgt_color}">'+item+'</span>')+
-    '</td></tr>').format(padding = indent*5, lft_color = lft_color, rgt_color = rgt_color))
+    '</td></tr>').format(padding = indent*10, lft_color = lft_color, rgt_color = rgt_color))
 
-def doComparison(dcmp, path, indent = 0):
+def doComparison(dcmp, path, indent = 0, git_ignore = []):
     _all = []
     _all.extend(dcmp.common_files)
     _all.extend(dcmp.left_only)
@@ -39,25 +39,41 @@ def doComparison(dcmp, path, indent = 0):
     _all = sorted(_all, key=str.lower)
 
 
-
-    for key in dcmp.subdirs.keys():
+    keys = sorted(dcmp.subdirs.keys(), key=str.lower)
+    for key in keys:
         self_path = path+'/'+key
-        printRow(key,'#000','#000', indent)
-        doComparison(dcmp.subdirs[key],self_path, indent + 1)
+        self_path_wild_flag = path+'/*'
+        # print('path:',self_path.strip('/\\\n')+'</br>')
+        # print('path (wild card):',self_path_wild_flag.strip('/\\\n')+'</br>')
+        if self_path.strip('/\\\n') not in git_ignore and self_path_wild_flag.strip('/\\\n') not in git_ignore:
+            printRow(key,'#000','#000', indent)
+            doComparison(dcmp.subdirs[key],self_path, indent + 1, git_ignore)
 
     for item in _all:
         lft_color = '#000'
         rgt_color = '#000'
+        skip = False
+        self_path = path+'/'+item
+        self_path_wild_flag = path+'/*'
 
-        if item in dcmp.diff_files:
-            lft_color = '#b25f00'
-            rgt_color = '#b25f00'
-        elif item in dcmp.right_only:
-            lft_color = '#ccc'
-        elif item in dcmp.left_only:
-            rgt_color = '#ccc'
 
-        printRow(item, lft_color, rgt_color, indent)
+        if self_path.strip('/\\\n') not in git_ignore and self_path_wild_flag.strip('/\\\n') not in git_ignore:
+            if item in dcmp.diff_files:
+                lft_color = '#b25f00'
+                rgt_color = '#b25f00'
+            elif item in dcmp.right_only:
+                lft_color = '#aaa'
+            elif item in dcmp.left_only:
+                rgt_color = '#aaa'
+            else:
+                skip = True
+        else:
+            skip = True
+
+        truncated = (item[:48] + '..') if len(item) > 50 else item
+
+        if not skip:
+            printRow(truncated, lft_color, rgt_color, indent)
 
 
 def compareFolders(left, right, git_ignore = [], ignore_svn = True):
@@ -67,10 +83,9 @@ def compareFolders(left, right, git_ignore = [], ignore_svn = True):
     if(ignore_svn):
         ignores.append('.svn')
 
-    #print(ignores)
     dcmp = dircmp(left, right,ignores)
-    print('<table style="width:100%"><tbody>')
-    doComparison(dcmp,'', 0)
+    print('<table style="width:100%;" class=\'data\' ><tbody>')
+    doComparison(dcmp,'', 0,git_ignore)
     print('</tbody></table>')
 
 def readGitIgnoresToList(_dir):
@@ -94,7 +109,6 @@ print("<title>Predeploy Compare</title>")
 print("</head>")
 print("<body>")
 print("<h1>Compare</h1>")
-print(git_ignores)
 print("""<div><form method='post'>
     <label for='folder1'>Current PROD: </label><input type='text' id='folder1' value="{folder1_value}" name='folder1'/>
     <label for='folder2'>Last Deploy PROD: </label><input type='text' id='folder2' value="{folder2_value}" name='folder2'/>
