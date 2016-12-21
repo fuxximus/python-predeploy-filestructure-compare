@@ -7,9 +7,9 @@ cgitb.enable()
 
 
 
-folder1 = 'D:\projects\loan.mobile.resources\lab'
-folder2 = 'D:\projects\loan.mobile.resources\lab'
-folder3 = 'D:\projects\loan'
+folder1 = '../data/deployed.prod'
+folder2 = '../data/current.prod'
+folder3 = '../data/rc'
 use_gitignore =  True
 ignore_svn = True
 
@@ -90,9 +90,12 @@ def compareFolders(left, right, git_ignore = [], ignore_svn = True):
 
 def readGitIgnoresToList(_dir):
     retarr = []
-    with open(_dir+'/.gitignore') as fin:
-        for line in fin:
-            retarr.append(line.strip('/\\\n'))
+    try:
+        with open(_dir+'/.gitignore') as fin:
+            for line in fin:
+                retarr.append(line.strip('/\\\n'))
+    except OSError as e:
+        retarr = []
 
     return retarr
 
