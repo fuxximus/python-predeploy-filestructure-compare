@@ -1,14 +1,18 @@
 #!D:/programs/python3/python.exe
 import cgi
 import cgitb
+import sys
+sys.path.insert(0,"../../src")
+from item import Item
+from item import Directory
 from filecmp import dircmp
 
 cgitb.enable()
 
 
 
-folder1 = '../data/deployed.prod'
-folder2 = '../data/current.prod'
+folder2 = '../data/deployed.prod'
+folder1 = '../data/current.prod'
 folder3 = '../data/rc'
 use_gitignore =  True
 ignore_svn = True
