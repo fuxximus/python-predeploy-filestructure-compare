@@ -18,3 +18,6 @@ class Item:
 class Directory(Item):
     isDirectory = True
     items = []
+
+class Version:
+    root = Directory()

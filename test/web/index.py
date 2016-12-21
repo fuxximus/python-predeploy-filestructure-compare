@@ -3,8 +3,7 @@ import cgi
 import cgitb
 import sys
 sys.path.insert(0,"../../src")
-from item import Item
-from item import Directory
+from item import Item, Directory
 from filecmp import dircmp
 
 cgitb.enable()
