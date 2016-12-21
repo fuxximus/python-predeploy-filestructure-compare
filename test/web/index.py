@@ -8,10 +8,8 @@ from filecmp import dircmp
 
 cgitb.enable()
 
-
-
-folder2 = '../data/deployed.prod'
 folder1 = '../data/current.prod'
+folder2 = '../data/deployed.prod'
 folder3 = '../data/rc'
 use_gitignore =  True
 ignore_svn = True
@@ -20,9 +18,9 @@ form = cgi.FieldStorage()
 form_posted = False
 if 'submit' in form:
     form_posted = True
-    folder1 = form['folder1'].value if 'folder1' in form else 'D:\projects\loan.mobile.resources\lab'
-    folder2 = form['folder2'].value if 'folder2' in form else 'D:\projects\loan.mobile.resources\lab'
-    folder3 = form['folder3'].value if 'folder3' in form else 'D:\projects\loan'
+    folder1 = form['folder1'].value if 'folder1' in form else folder1
+    folder2 = form['folder2'].value if 'folder2' in form else folder2
+    folder3 = form['folder3'].value if 'folder3' in form else folder3
     use_gitignore = False if 'use_gitignore' not in form or form['use_gitignore'].value == 'off' else True
     ignore_svn = False if 'ignore_svn' not in form or form['ignore_svn'].value == 'off' else True
 
