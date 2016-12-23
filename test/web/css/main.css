@@ -24,3 +24,7 @@ table.data tbody td, table.data td{
   border-bottom: 1px #eee solid;
   border-left: 1px #eee solid;
 }
+
+tr.item{
+  display: none;
+}
